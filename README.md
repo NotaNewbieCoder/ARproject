@@ -1,2 +1,2 @@
 # ARproject
-Demo for Google facial landmark tracker
+Demo for Google Tensorflow facemesh model
