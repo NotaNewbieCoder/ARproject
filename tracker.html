@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh"></script>
+    <style>
+        #container {
+            margin: 0px auto;
+            width: 500px;
+            height: 375px;
+            border: 10px #333 solid;
+        }
+
+        #videoElement {
+            width: 500px;
+            height: 375px;
+            background-color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <h1><button onclick="btn()">Watch</button></h1>
+    <div id="container">
+        <video autoplay="true" id="videoElement">
+
+        </video>
+    </div>
+</body>
+<script>
+    let video = document.querySelector("#videoElement");
+
+    if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                video.srcObject = stream;
+            })
+            .catch(function (err0r) {
+                console.log("Something went wrong!");
+            });
+    }
+    // Load the MediaPipe facemesh model assets.
+    async function mapVideo() {
+        const model = await facemesh.load();
+
+        // Pass in a video stream to the model to obtain 
+        // an array of detected faces from the MediaPipe graph.
+        const video = document.querySelector("video");
+        console.log(video)
+        const faces = await model.estimateFaces(video);
+
+        // Each face object contains a `scaledMesh` property,
+        // which is an array of 468 landmarks.
+        console.log(faces)
+        faces.forEach(face => console.log(face.scaledMesh));
+    }
+    let init = 0
+    function getMap() {
+        if (init < 100) {
+            console.log(init)
+                mapVideo()
+            init++
+        }
+        else {
+        }
+
+    }
+
+    function btn(){
+        setInterval(() => {
+            getMap()
+        }, 100);
+    }
+
+
+
+</script>
+
+</html>
